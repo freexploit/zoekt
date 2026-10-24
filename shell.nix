@@ -1,9 +1,11 @@
-{ pkgs ? import <nixpkgs> {
-  overlays = [
-    (import ./ctag-overlay.nix)
-  ];
-}}:
-let
+{
+  pkgs ?
+    import <nixpkgs> {
+      overlays = [
+        (import ./ctag-overlay.nix)
+      ];
+    },
+}: let
   # pkgs.universal-ctags installs the binary as "ctags", not "universal-ctags"
   # like zoekt expects.
   universal-ctags = pkgs.writeScriptBin "universal-ctags" ''
@@ -11,16 +13,16 @@ let
     exec ${pkgs.universal-ctags}/bin/ctags "$@"
   '';
 in
-pkgs.mkShell {
-  name = "zoekt";
+  pkgs.mkShell {
+    name = "zoekt";
 
-  nativeBuildInputs = [
-    pkgs.go_1_23
+    nativeBuildInputs = [
+      pkgs.go
 
-    # zoekt-git-index
-    pkgs.git
+      # zoekt-git-index
+      pkgs.git
 
-    # Used to index symbols
-    universal-ctags
-  ];
-}
+      # Used to index symbols
+      universal-ctags
+    ];
+  }

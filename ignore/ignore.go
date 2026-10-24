@@ -27,7 +27,7 @@ var (
 )
 
 type Matcher struct {
-	ignoreList []glob.Glob
+	ignoreList []*glob.Pattern
 }
 
 // ParseIgnoreFile parses an ignore-file according to the following rules
@@ -37,7 +37,7 @@ type Matcher struct {
 // - lines starting with # are ignored
 // - empty lines are ignored
 func ParseIgnoreFile(r io.Reader) (matcher *Matcher, error error) {
-	var patterns []glob.Glob
+	var patterns []*glob.Pattern
 	scanner := bufio.NewScanner(r)
 	for scanner.Scan() {
 		line := strings.TrimSpace(scanner.Text())
